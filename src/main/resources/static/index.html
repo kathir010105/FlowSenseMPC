@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FlowSense MPC Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>FlowSense MPC Dashboard</h1>
+
+    <div class="box">
+      <h2>Send Measurement</h2>
+      <label>Sensor ID:</label>
+      <input id="sensorId" value="pH_sensor_1" />
+
+      <label>Value:</label>
+      <input id="sensorValue" type="number" value="7.2" />
+
+      <button onclick="sendMeasurement()">Send</button>
+    </div>
+
+    <div class="box">
+      <h2>Recent Measurements</h2>
+      <button onclick="loadMeasurements()">Load</button>
+
+      <table id="dataTable">
+        <tr>
+          <th>Timestamp</th>
+          <th>Value</th>
+        </tr>
+      </table>
+    </div>
+
+    <h2>Predictive Control</h2>
+
+    <button onclick="loadLatestState()">Load Latest Values</button>
+
+    <label>Reference:</label>
+    <input id="ref" />
+
+    <label>y(k):</label>
+    <input id="yk" readonly />
+
+    <label>y(k-1):</label>
+    <input id="yk1" readonly />
+
+    <label>u(k-1):</label>
+    <input id="uk" readonly />
+
+    <button onclick="computeControl()">Compute Control</button>
+
+    <p>Control Output u(k): <span id="controlOutput"></span></p>
+
+    <script src="app.js"></script>
+  </body>
+</html>
