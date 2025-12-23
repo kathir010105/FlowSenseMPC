@@ -13,7 +13,7 @@ async function sendMeasurement() {
 }
 
 async function loadMeasurements() {
-  const sensorId = document.getElementById("sensorId").value;
+  const sensorId = document.getElementById("viewSensorId").value;
 
   const res = await fetch(`/api/data/recent/${sensorId}`);
   const data = await res.json();
@@ -36,7 +36,7 @@ async function loadMeasurements() {
 }
 
 async function loadLatestState() {
-  const sensorId = document.getElementById("sensorId").value;
+  const sensorId = document.getElementById("controlSensorId").value;
 
   try {
     const res = await fetch(`/api/control/latest-state/${sensorId}`);
@@ -64,7 +64,7 @@ async function computeControl() {
   const yk = parseFloat(document.getElementById("yk").value);
   const yk1 = parseFloat(document.getElementById("yk1").value);
   const uk = parseFloat(document.getElementById("uk").value);
-  const sensorId = document.getElementById("sensorId").value;
+  const sensorId = document.getElementById("controlSensorId").value;
 
   try {
     const res = await fetch("/api/control/compute", {

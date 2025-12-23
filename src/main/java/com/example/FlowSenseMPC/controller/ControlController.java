@@ -29,9 +29,9 @@ public class ControlController {
         double yk = ((Number) payload.get("yk")).doubleValue();
         double yk1 = ((Number) payload.get("yk1")).doubleValue();
         double uk = ((Number) payload.get("uk")).doubleValue();
-        String sensorId = (String) payload.getOrDefault("sensorId", "pH_sensor_1");
+        String sensorId = (String) payload.getOrDefault("sensorId", "turbidity_sensor_1");
 
-        double[] theta = modelService.getParameters();
+        double[] theta = modelService.getParameters(sensorId);
         double predicted = controlService.predict(theta, yk, yk1, uk);
         double control = controlService.computeControl(reference, predicted);
 

@@ -6,19 +6,24 @@ import com.example.FlowSenseMPC.model.RLSModel;
 import com.example.FlowSenseMPC.repository.MeasurementRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ModelService {
 
     private final MeasurementRepository repo;
-    private final RLSModel model = new RLSModel();
+    private final Map<String, RLSModel> models = new HashMap<>();
 
     public ModelService(MeasurementRepository repo) {
         this.repo = repo;
     }
 
     public void updateModel(String sensorId, double lastU) {
+        // Create a new RLS model for this sensor if it doesn't exist
+        models.putIfAbsent(sensorId, new RLSModel());
+        
         List<Measurement> data = repo.findTop20BySensorIdOrderByTimestampDesc(sensorId);
         if (data.size() < 3) return;
 
@@ -27,11 +32,12 @@ public class ModelService {
         double yk2 = data.get(2).getValue();
 
         double[] phi = { yk1, yk2, lastU };
-        model.update(phi, yk);
+        models.get(sensorId).update(phi, yk);
     }
 
-    public double[] getParameters() {
-        return model.getTheta();
+    public double[] getParameters(String sensorId) {
+        models.putIfAbsent(sensorId, new RLSModel());
+        return models.get(sensorId).getTheta();
     }
 }
 
