@@ -2,15 +2,21 @@
 <html>
   <head>
     <title>FlowSense MPC Dashboard</title>
+    <link rel="icon" type="image/png" href="toplogo.png" />
+
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>FlowSense MPC Dashboard</h1>
+    <div class="top">
+      <img src="logo.png" alt="FlowSense Logo" class="logo" />
+      <h1>FlowSense MPC Dashboard</h1>
+    </div>
 
     <div class="box">
       <h2>Send Measurement</h2>
       <label>Sensor Type:</label>
       <select id="sensorId">
+        <option value="">--Select Sensor--</option>
         <option value="turbidity_sensor_1">Turbidity (NTU)</option>
         <option value="flow_sensor_1">Flow Rate (m³/hr)</option>
         <option value="temp_sensor_1">Temperature (°C)</option>
@@ -18,21 +24,22 @@
       </select>
 
       <label>Value:</label>
-      <input id="sensorValue" type="number" value="15.0" />
+      <input id="sensorValue" type="number" value="" />
 
       <button onclick="sendMeasurement()">Send</button>
     </div>
 
     <div class="box">
       <h2>Recent Measurements</h2>
-    <label>View Sensor:</label>
-    <select id="viewSensorId">
+      <label>View Sensor:</label>
+      <select id="viewSensorId">
+        <option value="">--Select Sensor--</option>
         <option value="turbidity_sensor_1">Turbidity (NTU)</option>
         <option value="flow_sensor_1">Flow Rate (m³/hr)</option>
         <option value="temp_sensor_1">Temperature (°C)</option>
         <option value="do_sensor_1">Dissolved Oxygen (mg/L)</option>
-    </select>
-    <button onclick="loadMeasurements()">Load</button>
+      </select>
+      <button onclick="loadMeasurements()">Load</button>
 
       <table id="dataTable">
         <tr>
@@ -41,35 +48,40 @@
         </tr>
       </table>
     </div>
+    <div class="box">
+      <h2>Predictive Control</h2>
 
-    <h2>Predictive Control</h2>
-
-    <label>Select Sensor:</label>
-    <select id="controlSensorId">
+      <label>Select Sensor:</label>
+      <select id="controlSensorId">
+        <option value="">--Select Sensor--</option>
         <option value="turbidity_sensor_1">Turbidity (NTU)</option>
         <option value="flow_sensor_1">Flow Rate (m³/hr)</option>
         <option value="temp_sensor_1">Temperature (°C)</option>
         <option value="do_sensor_1">Dissolved Oxygen (mg/L)</option>
-    </select>
+      </select>
 
-    <button onclick="loadLatestState()">Load Latest Values</button>
+      <button onclick="loadLatestState()">Load Latest Values</button>
+      <br />
 
-    <label>Reference:</label>
-    <input id="ref" />
+      <label>Reference:</label>
+      <input id="ref" />
 
-    <label>y(k):</label>
-    <input id="yk" readonly />
+      <label>y(k):</label>
+      <input id="yk" readonly />
 
-    <label>y(k-1):</label>
-    <input id="yk1" readonly />
+      <label>y(k-1):</label>
+      <input id="yk1" readonly />
 
-    <label>u(k-1):</label>
-    <input id="uk" readonly />
+      <label>u(k-1):</label>
+      <input id="uk" readonly />
 
-    <button onclick="computeControl()">Compute Control</button>
-
-    <p>Control Output u(k): <span id="controlOutput"></span></p>
-
+      <button onclick="computeControl()">Compute Control</button>
+      
+      <div style="display: flex; align-items: center; gap: 30px; margin-top: 15px;">
+        <p style="margin: 0;">Control Output u(k): <span id="controlOutput"></span></p>
+        <p style="margin: 0; font-weight: bold;" id="controlInstruction"></p>
+      </div>
+    </div>
     <script src="app.js"></script>
   </body>
 </html>

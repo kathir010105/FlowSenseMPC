@@ -9,30 +9,70 @@ async function sendMeasurement() {
     body: JSON.stringify({ sensorId, value }),
   });
 
+  // Automatically switch viewSensorId to match the sensor we just sent data to
+  document.getElementById("viewSensorId").value = sensorId;
+
+  // Now load measurements for this sensor
   loadMeasurements();
 }
 
 async function loadMeasurements() {
   const sensorId = document.getElementById("viewSensorId").value;
 
-  const res = await fetch(`/api/data/recent/${sensorId}`);
-  const data = await res.json();
+  console.log(`=== Loading measurements for sensor: ${sensorId} ===`);
 
-  const table = document.getElementById("dataTable");
-  table.innerHTML = `
+  try {
+    const url = `/api/data/recent/${sensorId}`;
+    console.log(`Fetching from URL: ${url}`);
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log(`Received ${data.length} records:`, data);
+
+    const table = document.getElementById("dataTable");
+    table.innerHTML = `
         <tr>
+          <th>Sensor: ${sensorId}</th>
           <th>Timestamp</th>
-          <th>Value</th>
+          <th style="padding-left: 20px;">Value</th>
         </tr>
     `;
-  data.forEach((m) => {
-    table.innerHTML += `
+
+    if (data.length === 0) {
+      table.innerHTML += `
+        <tr>
+          <td colspan="3" style="text-align: center; color: gray;">No data available for ${sensorId}</td>
+        </tr>
+      `;
+    } else {
+      data.forEach((m) => {
+        // Format timestamp: "2025-12-23T20:02:15.824" -> "2025-12-23  20:02:15"
+        const formattedTime = m.timestamp
+          ? m.timestamp.replace("T", "  ").split(".")[0]
+          : "N/A";
+
+        table.innerHTML += `
           <tr>
-            <td>${m.timestamp}</td>
-            <td>${m.value}</td>
+            <td>${m.sensorId}</td>
+            <td>${formattedTime}</td>
+            <td style="padding-left: 20px;">${m.value}</td>
           </tr>
         `;
-  });
+      });
+    }
+
+    console.log(
+      `✓ Successfully loaded ${data.length} measurements for ${sensorId}`
+    );
+  } catch (error) {
+    console.error("Error loading measurements:", error);
+    alert("Failed to load measurements: " + error.message);
+  }
 }
 
 async function loadLatestState() {
@@ -78,8 +118,34 @@ async function computeControl() {
     }
 
     const result = await res.json();
+    const controlValue = result.control;
+
     document.getElementById("controlOutput").innerText =
-      result.control.toFixed(2);
+      controlValue.toFixed(2);
+
+    // Generate instruction based on control value
+    let instruction = "";
+    let instructionColor = "";
+
+    if (Math.abs(controlValue) < 0.5) {
+      instruction = "✓ System near setpoint. Maintain current settings.";
+      instructionColor = "green";
+    } else if (controlValue > 0) {
+      instruction = `⬆ Increase input by ${Math.abs(controlValue).toFixed(
+        2
+      )} units to reach setpoint.`;
+      instructionColor = "#00ff0dff";
+    } else {
+      instruction = `⬇ Decrease input by ${Math.abs(controlValue).toFixed(
+        2
+      )} units to reach setpoint.`;
+      instructionColor = "#ff6200ff";
+    }
+
+    document.getElementById("controlInstruction").innerText = instruction;
+    document.getElementById("controlInstruction").style.color =
+      instructionColor;
+
     console.log("Control computed successfully:", result);
   } catch (error) {
     console.error("Error computing control:", error);

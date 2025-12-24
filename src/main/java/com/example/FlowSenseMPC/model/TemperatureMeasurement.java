@@ -1,11 +1,28 @@
 package com.example.FlowSenseMPC.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-public class MeasurementDto {
+@Entity
+@Table(name = "temperature_measurements")
+public class TemperatureMeasurement {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String sensorId;
-    private Double value;
+    private Double value; // °C
+    private Double controlInput;
     private LocalDateTime timestamp;
+
+    // Getters & Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSensorId() {
         return sensorId;
@@ -21,6 +38,14 @@ public class MeasurementDto {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    public Double getControlInput() {
+        return controlInput;
+    }
+
+    public void setControlInput(Double controlInput) {
+        this.controlInput = controlInput;
     }
 
     public LocalDateTime getTimestamp() {

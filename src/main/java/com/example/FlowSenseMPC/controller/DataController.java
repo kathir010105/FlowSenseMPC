@@ -1,6 +1,5 @@
 package com.example.FlowSenseMPC.controller;
 
-import com.example.FlowSenseMPC.model.Measurement;
 import com.example.FlowSenseMPC.model.MeasurementDto;
 import com.example.FlowSenseMPC.service.IngestService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class DataController {
     }
 
     @GetMapping("/recent/{sensorId}")
-    public List<Measurement> recent(@PathVariable String sensorId) {
+    public List<MeasurementDto> recent(@PathVariable String sensorId) {
         return ingestService.getRecent(sensorId);
     }
 }
