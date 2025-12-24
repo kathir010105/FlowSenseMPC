@@ -152,7 +152,7 @@ Where:
 ### Control Instructions
 
 - **|u(k)| < 0.5**: ✅ Maintain current levels (GREEN)
-- **u(k) > 0**: 🔵 Increase parameter value (BLUE)
+- **u(k) > 0**: 🟢 Increase parameter value (GREEN)
 - **u(k) < 0**: 🟠 Decrease parameter value (ORANGE)
 
 ## 💻 Installation
